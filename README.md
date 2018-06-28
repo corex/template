@@ -1,2 +1,4 @@
-# template
-Template system (inheritance, closures, ...)
+# Template system
+Inheritance, closures, ...
+
+**_Versioning for this package follows http://semver.org/. Backwards compatibility might break on upgrade to major versions._**

@@ -8,7 +8,7 @@ If you need more than this "simplicity", Mustache is recommended.
 Every call to load() and render() will use base paths.
 
 Mustache is default set to escape variables. This has been disabled on this package.
-It is however possible to escape by calling escape() on template of you need to escape things i.e. html-tags.
+It is however possible to escape by calling escape() on template if you need to escape values i.e. html-tags.
 
 ```php
 // Set base path (can be called more than once). Paths will be searched in reverse order.

@@ -1,55 +1,69 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CoRex\Template\Helpers;
+
+use Mustache_Engine;
+use Mustache_Loader_CascadingLoader;
+use Mustache_Loader_FilesystemLoader;
 
 class Engine
 {
+    /** @var string|null */
     private $templateName;
+
+    /** @var string|null */
     private $templateContent;
+
+    /** @var string[] */
     private $variables;
+
+    /** @var bool */
     private $escape;
 
-    /**
-     * @var PathEntry[]
-     */
+    /** @var PathEntry[] */
     private $pathEntries;
 
     /**
-     * Engine constructor.
+     * Engine.
      *
      * @param string $templateName
      * @param string $templateContent
-     * @param array $basePathEntries
+     * @param string[] $basePathEntries
      * @throws \Exception
      */
-    public function __construct($templateName = null, $templateContent = null, array $basePathEntries = [])
-    {
+    public function __construct(
+        ?string $templateName = null,
+        ?string $templateContent = null,
+        array $basePathEntries = []
+    ) {
         $this->templateName = $templateName;
         $this->templateContent = $templateContent;
         $this->variables = [];
         $this->escape = false;
 
-        //
         if ($templateName !== null && $templateContent !== null) {
             throw new \Exception('It is not allowed to set both name of template and content of template.');
         }
 
         // Add base path entries.
         $this->pathEntries = [];
-        if (count($basePathEntries) > 0) {
-            foreach ($basePathEntries as $basePathEntry) {
-                $this->pathEntries[] = $basePathEntry;
-            }
+        if (count($basePathEntries) === 0) {
+            return;
+        }
+        foreach ($basePathEntries as $basePathEntry) {
+            $this->pathEntries[] = $basePathEntry;
         }
     }
 
     /**
      * Escape variables.
      *
-     * @param boolean $escape
+     * @param bool $escape
      * @return $this
      */
-    public function escape($escape = true)
+    public function escape(bool $escape = true)
     {
         $this->escape = $escape;
         return $this;
@@ -60,9 +74,9 @@ class Engine
      *
      * @param string $path
      * @param string $extension Default 'tpl'.
-     * @return $this
+     * @return Engine
      */
-    public function path($path, $extension = 'tpl')
+    public function path(string $path, string $extension = 'tpl'): self
     {
         $this->pathEntries[] = new PathEntry($path, $extension);
         return $this;
@@ -73,9 +87,9 @@ class Engine
      *
      * @param string $name
      * @param mixed $value
-     * @return $this
+     * @return Engine
      */
-    public function variable($name, $value)
+    public function variable(string $name, $value): self
     {
         $this->variables[$name] = $value;
         return $this;
@@ -84,14 +98,14 @@ class Engine
     /**
      * Context.
      *
-     * @param array $variables
-     * @return $this
+     * @param string[] $variables
+     * @return Engine
      */
-    public function variables(array $variables)
+    public function variables(array $variables): self
     {
         if (count($variables) > 0) {
             foreach ($variables as $name => $value) {
-                $this->variable($name, $value);
+                $this->variable((string)$name, $value);
             }
         }
         return $this;
@@ -100,10 +114,9 @@ class Engine
     /**
      * Render.
      *
-     * @return string
      * @throws \Exception
      */
-    public function render()
+    public function render(): string
     {
         try {
             if ($this->templateContent !== null) {
@@ -123,21 +136,20 @@ class Engine
     /**
      * To string.
      *
-     * @return string
      * @throws \Exception
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->render();
     }
 
     /**
-     * Mustache engone.
+     * Mustache engine.
      *
-     * @param boolean $addBasePaths
-     * @return \Mustache_Engine
+     * @param bool $addBasePaths
+     * @return Mustache_Engine
      */
-    public function mustacheEngine($addBasePaths = true)
+    public function mustacheEngine(bool $addBasePaths = true): Mustache_Engine
     {
         $mustacheEngine = $this->mustacheEngineInitialize();
         if ($addBasePaths) {
@@ -148,10 +160,8 @@ class Engine
 
     /**
      * Render template content.
-     *
-     * @return string
      */
-    private function renderTemplateContent()
+    private function renderTemplateContent(): string
     {
         $mustacheEngine = $this->mustacheEngineInitialize();
         return $mustacheEngine->render($this->templateContent, $this->variables);
@@ -159,10 +169,8 @@ class Engine
 
     /**
      * Render template name.
-     *
-     * @return string
      */
-    private function renderTemplateName()
+    private function renderTemplateName(): string
     {
         $mustacheEngine = $this->mustacheEngineInitialize();
         $this->mustacheAddFilesystemLoaders($mustacheEngine);
@@ -172,18 +180,18 @@ class Engine
     /**
      * Mustache add file system loaders.
      *
-     * @param \Mustache_Engine $engine
+     * @param Mustache_Engine $engine
      */
-    private function mustacheAddFilesystemLoaders(\Mustache_Engine &$engine)
+    private function mustacheAddFilesystemLoaders(Mustache_Engine &$engine): void
     {
         // Get and reverse path entries to have the newest first.
         $pathEntries = $this->pathEntries;
         rsort($pathEntries);
 
         // Add filesystem loaders.
-        $cascadingLoader = new \Mustache_Loader_CascadingLoader();
+        $cascadingLoader = new Mustache_Loader_CascadingLoader();
         foreach ($pathEntries as $pathEntry) {
-            $filesystemLoader = new \Mustache_Loader_FilesystemLoader($pathEntry->getPath(), [
+            $filesystemLoader = new Mustache_Loader_FilesystemLoader($pathEntry->getPath(), [
                 'extension' => $pathEntry->getExtension()
             ]);
             $cascadingLoader->addLoader($filesystemLoader);
@@ -193,25 +201,22 @@ class Engine
 
     /**
      * Mustache engine.
-     *
-     * @return \Mustache_Engine
      */
-    private function mustacheEngineInitialize()
+    private function mustacheEngineInitialize(): Mustache_Engine
     {
         $options = [];
 
         // Set escape function.
         if ($this->escape) {
-            $options['escape'] = function ($value) {
+            $options['escape'] = static function ($value) {
                 return htmlspecialchars($value, ENT_COMPAT, 'UTF-8');
             };
         } else {
-            $options['escape'] = function ($value) {
+            $options['escape'] = static function ($value) {
                 return $value;
             };
         }
 
-        $engine = new \Mustache_Engine($options);
-        return $engine;
+        return new Mustache_Engine($options);
     }
 }

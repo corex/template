@@ -1,18 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CoRex\Template\Helpers;
 
 class PathEntry
 {
+    /** @var string */
     private $path;
+
+    /** @var string */
     private $extension;
 
     /**
-     * PathEntry constructor.
+     * PathEntry.
+     *
      * @param string $path
      * @param string $extension
      */
-    public function __construct($path, $extension)
+    public function __construct(string $path, string $extension)
     {
         $this->path = $path;
         $this->extension = $extension;
@@ -23,7 +29,7 @@ class PathEntry
      *
      * @return string
      */
-    public function getPath()
+    public function getPath(): string
     {
         return $this->path;
     }
@@ -33,7 +39,7 @@ class PathEntry
      *
      * @return string
      */
-    public function getExtension()
+    public function getExtension(): string
     {
         return $this->extension;
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\CoRex\Template;
 
 use CoRex\Helpers\Obj;
@@ -9,7 +11,10 @@ use PHPUnit\Framework\TestCase;
 
 class EngineTest extends TestCase
 {
+    /** @var string */
     private $randomString;
+
+    /** @var int */
     private $randomNumber;
 
     /**
@@ -18,7 +23,7 @@ class EngineTest extends TestCase
      * @throws \ReflectionException
      * @throws \Exception
      */
-    public function testConstructorDefault()
+    public function testConstructorDefault(): void
     {
         $engine = new Engine();
         $this->assertNull(Obj::getProperty('templateName', $engine));
@@ -34,7 +39,7 @@ class EngineTest extends TestCase
      * @throws \ReflectionException
      * @throws \Exception
      */
-    public function testConstructorWithTemplateName()
+    public function testConstructorWithTemplateName(): void
     {
         $engine = new Engine($this->randomString, null, [$this->randomString, $this->randomNumber]);
         $this->assertEquals($this->randomString, Obj::getProperty('templateName', $engine));
@@ -48,9 +53,9 @@ class EngineTest extends TestCase
      * @throws \ReflectionException
      * @throws \Exception
      */
-    public function testConstructorWithTemplateContent()
+    public function testConstructorWithTemplateContent(): void
     {
-        $engine = new Engine(null, $this->randomNumber, [$this->randomString, $this->randomNumber]);
+        $engine = new Engine(null, (string)$this->randomNumber, [$this->randomString, $this->randomNumber]);
         $this->assertNull(Obj::getProperty('templateName', $engine));
         $this->assertEquals($this->randomNumber, Obj::getProperty('templateContent', $engine));
         $this->assertEquals([$this->randomString, $this->randomNumber], Obj::getProperty('pathEntries', $engine));
@@ -61,11 +66,11 @@ class EngineTest extends TestCase
      *
      * @throws \Exception
      */
-    public function testConstructorException()
+    public function testConstructorException(): void
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('It is not allowed to set both name of template and content of template.');
-        new Engine($this->randomString, $this->randomNumber);
+        new Engine($this->randomString, (string)$this->randomNumber);
     }
 
     /**
@@ -74,7 +79,7 @@ class EngineTest extends TestCase
      * @throws \ReflectionException
      * @throws \Exception
      */
-    public function testEscape()
+    public function testEscape(): void
     {
         $engine = new Engine();
         $this->assertFalse(Obj::getProperty('escape', $engine));
@@ -88,12 +93,12 @@ class EngineTest extends TestCase
      * @throws \ReflectionException
      * @throws \Exception
      */
-    public function testPath()
+    public function testPath(): void
     {
         $engine = new Engine();
         $this->assertEquals([], Obj::getProperty('pathEntries', $engine));
-        $engine->path($this->randomString, $this->randomNumber);
-        $pathEntry = new PathEntry($this->randomString, $this->randomNumber);
+        $engine->path($this->randomString, (string)$this->randomNumber);
+        $pathEntry = new PathEntry($this->randomString, (string)$this->randomNumber);
         $this->assertEquals([$pathEntry], Obj::getProperty('pathEntries', $engine));
     }
 
@@ -103,7 +108,7 @@ class EngineTest extends TestCase
      * @throws \ReflectionException
      * @throws \Exception
      */
-    public function testVariable()
+    public function testVariable(): void
     {
         $engine = new Engine();
         $this->assertEquals([], Obj::getProperty('variables', $engine));
@@ -117,9 +122,9 @@ class EngineTest extends TestCase
      * @throws \ReflectionException
      * @throws \Exception
      */
-    public function testVariables()
+    public function testVariables(): void
     {
-        $checkArray = [$this->randomString => $this->randomNumber, $this->randomNumber => $this->randomString];
+        $checkArray = [$this->randomString => $this->randomNumber, (string)$this->randomNumber => $this->randomString];
         $engine = new Engine();
         $this->assertEquals([], Obj::getProperty('variables', $engine));
         $engine->variables($checkArray);
@@ -131,7 +136,7 @@ class EngineTest extends TestCase
      *
      * @throws \Exception
      */
-    public function testRenderTemplateName()
+    public function testRenderTemplateName(): void
     {
         $pathEntry = new PathEntry(dirname(__DIR__) . '/templates', 'tpl');
         $engine = new Engine('test', null, [$pathEntry]);
@@ -145,7 +150,7 @@ class EngineTest extends TestCase
      *
      * @throws \Exception
      */
-    public function testRenderTemplateContent()
+    public function testRenderTemplateContent(): void
     {
         $template = '({{test}})';
         $engine = new Engine(null, $template);
@@ -159,7 +164,7 @@ class EngineTest extends TestCase
      *
      * @throws \Exception
      */
-    public function testRenderException()
+    public function testRenderException(): void
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Neither template-name or template-content is set.');
@@ -172,7 +177,7 @@ class EngineTest extends TestCase
      *
      * @throws \Exception
      */
-    public function testToString()
+    public function testToString(): void
     {
         $template = '({{test}})';
         $engine = new Engine(null, $template);
@@ -186,7 +191,7 @@ class EngineTest extends TestCase
      *
      * @throws \Exception
      */
-    public function testMustacheEngine()
+    public function testMustacheEngine(): void
     {
         $engine = new Engine();
         $mustacheEngine = $engine->mustacheEngine();
@@ -198,7 +203,7 @@ class EngineTest extends TestCase
      *
      * @throws \Exception
      */
-    public function testNotEscaped()
+    public function testNotEscaped(): void
     {
         $check = '<test>something</test>';
         $pathEntry = new PathEntry(dirname(__DIR__) . '/templates', 'tpl');
@@ -212,7 +217,7 @@ class EngineTest extends TestCase
      *
      * @throws \Exception
      */
-    public function testEscaped()
+    public function testEscaped(): void
     {
         $check = '<test>something</test>';
         $pathEntry = new PathEntry(dirname(__DIR__) . '/templates', 'tpl');
@@ -228,10 +233,10 @@ class EngineTest extends TestCase
     /**
      * Setup.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->randomNumber = mt_rand(1, 100000);
-        $this->randomString = md5($this->randomNumber);
+        $this->randomString = md5((string)$this->randomNumber);
     }
 }

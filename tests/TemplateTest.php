@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\CoRex\Template;
 
 use CoRex\Helpers\Obj;
@@ -14,7 +16,7 @@ class TemplateTest extends TestCase
      *
      * @throws \ReflectionException
      */
-    public function testClearBasePaths()
+    public function testClearBasePaths(): void
     {
         $basePathEntries = Obj::getProperty('basePathEntries', null, [], Template::class);
         $this->assertEquals([], $basePathEntries);
@@ -31,7 +33,7 @@ class TemplateTest extends TestCase
      *
      * @throws \ReflectionException
      */
-    public function testBasePath()
+    public function testBasePath(): void
     {
         $basePathEntries = Obj::getProperty('basePathEntries', null, [], Template::class);
         $this->assertEquals([], $basePathEntries);
@@ -49,7 +51,7 @@ class TemplateTest extends TestCase
      *
      * @throws \Exception
      */
-    public function testLoadFound()
+    public function testLoadFound(): void
     {
         Template::basePath(dirname(__DIR__) . '/templates');
         $this->assertEquals('()', Template::load('test')->render());
@@ -60,7 +62,7 @@ class TemplateTest extends TestCase
      *
      * @throws \Exception
      */
-    public function testLoadNotFound()
+    public function testLoadNotFound(): void
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Unknown template: test');
@@ -72,10 +74,10 @@ class TemplateTest extends TestCase
      *
      * @throws \Exception
      */
-    public function testRender()
+    public function testRender(): void
     {
         Template::basePath(dirname(__DIR__) . '/templates');
-        $check = md5(mt_rand(1, 100000));
+        $check = md5((string)mt_rand(1, 100000));
         $content = Template::render('test', [
             'test' => $check
         ]);
@@ -87,9 +89,9 @@ class TemplateTest extends TestCase
      *
      * @throws \Exception
      */
-    public function testParse()
+    public function testParse(): void
     {
-        $check = md5(mt_rand(1, 100000));
+        $check = md5((string)mt_rand(1, 100000));
         $template = '({{test}})';
         $content = Template::parse($template, [
             'test' => $check
@@ -103,7 +105,7 @@ class TemplateTest extends TestCase
      *
      * @throws \Exception
      */
-    public function testMustacheEngine()
+    public function testMustacheEngine(): void
     {
         $mustacheEngine = Template::mustacheEngine();
         $this->assertInstanceOf(\Mustache_Engine::class, $mustacheEngine);
@@ -112,7 +114,7 @@ class TemplateTest extends TestCase
     /**
      * Setup.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         Template::clearBasePaths();

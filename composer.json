@@ -10,12 +10,12 @@
         }
     ],
     "require": {
-        "php": ">=7.0",
+        "php": "^7.2",
         "mustache/mustache": "^2.12",
-        "corex/helpers": "^1.3"
+        "corex/helpers": "^2.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.3"
+        "phpunit/phpunit": "^7.5"
     },
     "autoload": {
         "psr-4": {

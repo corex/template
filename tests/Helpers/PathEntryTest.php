@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\CoRex\Template;
 
 use CoRex\Helpers\Obj;
@@ -8,51 +10,31 @@ use PHPUnit\Framework\TestCase;
 
 class PathEntryTest extends TestCase
 {
+    /** @var string */
     private $randomString;
+
+    /** @var int */
     private $randomNumber;
 
     /**
-     * Test constructor.
+     * Test.
+     *
      * @throws \ReflectionException
      */
-    public function testConstructor()
+    public function testConstructor(): void
     {
-        $pathEntry = new PathEntry($this->randomString, $this->randomNumber);
+        $pathEntry = new PathEntry($this->randomString, (string)$this->randomNumber);
         $this->assertEquals($this->randomString, Obj::getProperty('path', $pathEntry));
         $this->assertEquals($this->randomNumber, Obj::getProperty('extension', $pathEntry));
     }
 
     /**
-     * Test get path.
-     * @throws \ReflectionException
-     */
-    public function testGetPath()
-    {
-        $pathEntry = new PathEntry(null, null);
-        Obj::setProperty('path', $pathEntry, $this->randomString);
-        $this->assertEquals($this->randomString, $pathEntry->getPath());
-        $this->assertNull($pathEntry->getExtension());
-    }
-
-    /**
-     * Test get extension.
-     * @throws \ReflectionException
-     */
-    public function testGetExtension()
-    {
-        $pathEntry = new PathEntry(null, null);
-        Obj::setProperty('extension', $pathEntry, $this->randomString);
-        $this->assertNull($pathEntry->getPath());
-        $this->assertEquals($this->randomString, $pathEntry->getExtension());
-    }
-
-    /**
      * Setup.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->randomNumber = mt_rand(1, 100000);
-        $this->randomString = md5($this->randomNumber);
+        $this->randomString = md5((string)$this->randomNumber);
     }
 }

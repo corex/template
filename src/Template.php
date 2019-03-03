@@ -39,7 +39,7 @@ class Template
      *
      * @param string $templateName
      * @return Engine
-     * @throws \Exception
+     * @throws Exceptions\TemplateException
      */
     public static function load(string $templateName): Engine
     {
@@ -53,7 +53,7 @@ class Template
      * @param string $templateName
      * @param string[] $variables
      * @return string
-     * @throws \Exception
+     * @throws Exceptions\TemplateException
      */
     public static function render(string $templateName, array $variables = []): string
     {
@@ -68,7 +68,7 @@ class Template
      * @param string $content
      * @param string[] $variables
      * @return string
-     * @throws \Exception
+     * @throws Exceptions\TemplateException
      */
     public static function parse(string $content, array $variables = []): string
     {
@@ -83,7 +83,7 @@ class Template
      *
      * @param bool $addBasePaths Default true.
      * @return \Mustache_Engine
-     * @throws \Exception
+     * @throws Exceptions\TemplateException
      */
     public static function mustacheEngine(bool $addBasePaths = true): \Mustache_Engine
     {

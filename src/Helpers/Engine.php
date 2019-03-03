@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CoRex\Template\Helpers;
 
+use CoRex\Template\Exceptions\TemplateException;
 use Mustache_Engine;
 use Mustache_Loader_CascadingLoader;
 use Mustache_Loader_FilesystemLoader;
@@ -31,7 +32,7 @@ class Engine
      * @param string $templateName
      * @param string $templateContent
      * @param string[] $basePathEntries
-     * @throws \Exception
+     * @throws TemplateException
      */
     public function __construct(
         ?string $templateName = null,
@@ -44,7 +45,7 @@ class Engine
         $this->escape = false;
 
         if ($templateName !== null && $templateContent !== null) {
-            throw new \Exception('It is not allowed to set both name of template and content of template.');
+            throw new TemplateException('It is not allowed to set both name of template and content of template.');
         }
 
         // Add base path entries.
@@ -114,22 +115,17 @@ class Engine
     /**
      * Render.
      *
-     * @throws \Exception
+     * @throws TemplateException
      */
     public function render(): string
     {
-        try {
-            if ($this->templateContent !== null) {
-                $result = $this->renderTemplateContent();
-            } elseif ($this->templateName !== null) {
-                $result = $this->renderTemplateName();
-            } else {
-                throw new \Exception('Neither template-name or template-content is set.');
-            }
-        } catch (\Exception $exception) {
-            throw new \Exception($exception->getMessage(), $exception->getCode());
+        if ($this->templateContent !== null) {
+            $result = $this->renderTemplateContent();
+        } elseif ($this->templateName !== null) {
+            $result = $this->renderTemplateName();
+        } else {
+            throw new TemplateException('Neither template-name or template-content is set.');
         }
-
         return $result;
     }
 
@@ -140,7 +136,12 @@ class Engine
      */
     public function __toString(): string
     {
-        return $this->render();
+        try {
+            return $this->render();
+        } catch (\Exception $e) {
+            error_log($e->getMessage());
+            return '';
+        }
     }
 
     /**

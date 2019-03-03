@@ -10,6 +10,8 @@ Every call to load() and render() will use base paths.
 Mustache is default set to escape variables. This has been disabled on this package.
 It is however possible to escape by calling escape() on template if you need to escape values i.e. html-tags.
 
+Note: when printing layout/view (__toString) and exception is thrown, it will be catched and send through error_log(). 
+
 ```php
 // Set base path (can be called more than once). Paths will be searched in reverse order.
 Template::basePath('/path/to/templates');

@@ -160,16 +160,29 @@ class EngineTest extends TestCase
     }
 
     /**
+     * Test render template exception.
+     *
+     * @throws \Exception
+     */
+    public function testRenderTemplateException(): void
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Neither template-name or template-content is set.');
+        $engine = new Engine(null, null);
+        $engine->render();
+    }
+
+    /**
      * Test render exception.
      *
      * @throws \Exception
      */
     public function testRenderException(): void
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Neither template-name or template-content is set.');
-        $engine = new Engine(null, null);
-        $engine->render();
+        $engine = new Engine('test');
+        $engine->variable('test', 'test');
+        $result = (string)$engine;
+        $this->assertSame('', $result);
     }
 
     /**

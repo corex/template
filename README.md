@@ -1,6 +1,9 @@
 # Simple template system.
 
-**_Versioning for this package follows http://semver.org/. Backwards compatibility might break on upgrade to major versions._**
+![License](https://img.shields.io/packagist/l/corex/template.svg)
+![Build Status](https://travis-ci.org/corex/template.svg?branch=master)
+![codecov](https://codecov.io/gh/corex/template/branch/master/graph/badge.svg)
+
 
 The goal for this package is simplicity. It is based on Mustache but has a very simple approach.
 If you need more than this "simplicity", Mustache is recommended.

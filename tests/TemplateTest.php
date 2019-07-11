@@ -29,6 +29,23 @@ class TemplateTest extends TestCase
     }
 
     /**
+     * Test clear paths.
+     *
+     * @throws \ReflectionException
+     */
+    public function testClearPaths(): void
+    {
+        $basePathEntries = Obj::getProperty('basePathEntries', null, [], Template::class);
+        $this->assertEquals([], $basePathEntries);
+        Template::path(dirname(__DIR__) . '/templates');
+        $basePathEntries = Obj::getProperty('basePathEntries', null, null, Template::class);
+        $this->assertGreaterThan(0, count($basePathEntries));
+        Template::clearPaths();
+        $basePathEntries = Obj::getProperty('basePathEntries', null, [], Template::class);
+        $this->assertEquals([], $basePathEntries);
+    }
+
+    /**
      * Test base path.
      *
      * @throws \ReflectionException
@@ -39,6 +56,24 @@ class TemplateTest extends TestCase
         $this->assertEquals([], $basePathEntries);
 
         Template::basePath(dirname(__DIR__) . '/templates');
+
+        $basePathEntries = Obj::getProperty('basePathEntries', null, null, Template::class);
+
+        $pathEntry = new PathEntry(dirname(__DIR__) . '/templates', 'tpl');
+        $this->assertEquals([$pathEntry], $basePathEntries);
+    }
+
+    /**
+     * Test path.
+     *
+     * @throws \ReflectionException
+     */
+    public function testPath(): void
+    {
+        $basePathEntries = Obj::getProperty('basePathEntries', null, [], Template::class);
+        $this->assertEquals([], $basePathEntries);
+
+        Template::path(dirname(__DIR__) . '/templates');
 
         $basePathEntries = Obj::getProperty('basePathEntries', null, null, Template::class);
 

@@ -97,7 +97,20 @@ class Engine
     }
 
     /**
-     * Context.
+     * Var (shortcut to variable).
+     *
+     * @param string $name
+     * @param mixed $value
+     * @return Engine
+     */
+    public function var(string $name, $value): self
+    {
+        $this->variable($name, $value);
+        return $this;
+    }
+
+    /**
+     * Variables.
      *
      * @param string[] $variables
      * @return Engine
@@ -109,6 +122,18 @@ class Engine
                 $this->variable((string)$name, $value);
             }
         }
+        return $this;
+    }
+
+    /**
+     * Vars (shortcut to variables).
+     *
+     * @param string[] $variables
+     * @return Engine
+     */
+    public function vars(array $variables): self
+    {
+        $this->variables($variables);
         return $this;
     }
 

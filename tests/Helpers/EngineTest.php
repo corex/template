@@ -117,6 +117,20 @@ class EngineTest extends TestCase
     }
 
     /**
+     * Test var.
+     *
+     * @throws \ReflectionException
+     * @throws \Exception
+     */
+    public function testVar(): void
+    {
+        $engine = new Engine();
+        $this->assertEquals([], Obj::getProperty('variables', $engine));
+        $engine->var($this->randomString, $this->randomNumber);
+        $this->assertEquals([$this->randomString => $this->randomNumber], Obj::getProperty('variables', $engine));
+    }
+
+    /**
      * Test variables.
      *
      * @throws \ReflectionException
@@ -132,13 +146,28 @@ class EngineTest extends TestCase
     }
 
     /**
+     * Test vars.
+     *
+     * @throws \ReflectionException
+     * @throws \Exception
+     */
+    public function testVars(): void
+    {
+        $checkArray = [$this->randomString => $this->randomNumber, (string)$this->randomNumber => $this->randomString];
+        $engine = new Engine();
+        $this->assertEquals([], Obj::getProperty('variables', $engine));
+        $engine->vars($checkArray);
+        $this->assertEquals($checkArray, Obj::getProperty('variables', $engine));
+    }
+
+    /**
      * Test render template name.
      *
      * @throws \Exception
      */
     public function testRenderTemplateName(): void
     {
-        $pathEntry = new PathEntry(dirname(__DIR__) . '/templates', 'tpl');
+        $pathEntry = new PathEntry(dirname(dirname(__DIR__)) . '/templates', 'tpl');
         $engine = new Engine('test', null, [$pathEntry]);
         $engine->variable('test', $this->randomString);
         $result = $engine->render();
@@ -219,7 +248,7 @@ class EngineTest extends TestCase
     public function testNotEscaped(): void
     {
         $check = '<test>something</test>';
-        $pathEntry = new PathEntry(dirname(__DIR__) . '/templates', 'tpl');
+        $pathEntry = new PathEntry(dirname(dirname(__DIR__)) . '/templates', 'tpl');
         $engine = new Engine('test', null, [$pathEntry]);
         $engine->variable('test', $check);
         $this->assertEquals('(' . $check . ')', $engine->render());
@@ -233,7 +262,7 @@ class EngineTest extends TestCase
     public function testEscaped(): void
     {
         $check = '<test>something</test>';
-        $pathEntry = new PathEntry(dirname(__DIR__) . '/templates', 'tpl');
+        $pathEntry = new PathEntry(dirname(dirname(__DIR__)) . '/templates', 'tpl');
         $engine = new Engine('test', null, [$pathEntry]);
         $engine->variable('test', $check);
         $engine->escape();

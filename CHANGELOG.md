@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.1.0
+
+### Added
+- Added var() and vars() as shortcuts for variable() and variables().
+
+### Fixed
+- Moved test to correct location.
+
 ## 2.0.2
 
 ### Fixed

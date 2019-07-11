@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\CoRex\Template;
+namespace Tests\CoRex\Template\Helpers;
 
 use CoRex\Helpers\Obj;
 use CoRex\Template\Helpers\PathEntry;

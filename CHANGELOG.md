@@ -3,10 +3,12 @@
 ## 2.1.0
 
 ### Added
-- Added var() and vars() as shortcuts for variable() and variables().
+- Added var() and vars() as shortcuts for variable() and variables() on engine.
+- Added clearPaths() and path() as shortcuts for clearBasePaths() and basePath().
 
 ### Fixed
 - Moved test to correct location.
+- Fixed spelling error on readme.
 
 ## 2.0.2
 

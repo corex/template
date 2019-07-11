@@ -22,6 +22,14 @@ class Template
     }
 
     /**
+     * Clear base paths (shortcut for clearBasePaths).
+     */
+    public static function clearPaths(): void
+    {
+        self::clearBasePaths();
+    }
+
+    /**
      * Set base path (can be called more than once).
      * Note: paths will be searched in reverse order.
      *
@@ -32,6 +40,19 @@ class Template
     {
         self::initialize();
         self::$basePathEntries[] = new PathEntry($path, $extension);
+    }
+
+    /**
+     * Set path (can be called more than once).
+     * (shortcut for basePath).
+     * Note: paths will be searched in reverse order.
+     *
+     * @param string $path
+     * @param string $extension
+     */
+    public static function path(string $path, string $extension = 'tpl'): void
+    {
+        self::basePath($path, $extension);
     }
 
     /**
